@@ -21,17 +21,17 @@ namespace Bede.GameTest.Console
         }
 
 
-        public int[,] Init()
+        public int[,] Init(int[,] plan)
         {
             for (int i = 0; i < GRID_NUMBER; i++)
             {
                 for (int j = 0; j < GRID_NUMBER; j++)
                 {
-                    Plan[i, j] = 0;
+                    plan[i, j] = 0;
                 }
             }
 
-            return Plan;
+            return plan;
         }
 
 

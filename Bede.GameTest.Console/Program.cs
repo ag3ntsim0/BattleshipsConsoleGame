@@ -13,8 +13,15 @@ namespace Bede.GameTest.Console
 
             
             var player = new Player(false);
-            var plan=player.BuildTempPlan(new Cordination() { Coordination = new int[2] { 6 ,1 }, Direction = Cordination.DirectionEnum.Top, Ship = Cordination.ShipsEnum.Destroyers });
-            new Game().DisplayPlan(plan);
+            var cordinations = new List<Cordination>() {
+                new Cordination() { Coordination = new int[2] { 2, 3 }, Direction = Cordination.DirectionEnum.Right, Ship = Cordination.ShipsEnum.Destroyers },
+                new Cordination() { Coordination = new int[2] { 6 ,1 }, Direction = Cordination.DirectionEnum.Up, Ship = Cordination.ShipsEnum.Destroyers }
+            };
+            var game = new Game();
+            var x = game.Plan;
+            player.Submit(ref x, cordinations);
+            game.Plan = x;
+            game.DisplayPlan(game.Plan);
 
             System.Console.ReadKey();
         }

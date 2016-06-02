@@ -10,7 +10,7 @@ namespace Bede.GameTest.Console
     {
         public enum DirectionEnum
         {
-            Top,
+            Up,
             Left,
             Right,
             Down

@@ -42,20 +42,20 @@ namespace Bede.GameTest.Console
 
 
 
-        private bool Exists(int[,] plan, Cordination cordination)
-        {
-            for (int i = 0; i < Game.GRID_NUMBER; i++)
-            {
-                for (int j = 0; j < Game.GRID_NUMBER; j++)
-                {
-                    if(plan[i, j]== cordination.)
-                }
-            }
+        //private bool Exists(int[,] plan, Cordination cordination)
+        //{
+        //    for (int i = 0; i < Game.GRID_NUMBER; i++)
+        //    {
+        //        for (int j = 0; j < Game.GRID_NUMBER; j++)
+        //        {
+        //            if(plan[i, j]== cordination.)
+        //        }
+        //    }
 
-        }
+        //}
 
 
-        private int[,] BuildTempPlan(Cordination cordination)
+        public int[,] BuildTempPlan(Cordination cordination)
         {
 
             int[,] planTemp = new int[Game.GRID_NUMBER, Game.GRID_NUMBER];
@@ -64,30 +64,56 @@ namespace Bede.GameTest.Console
             switch (cordination.Direction)
             {
                 case Cordination.DirectionEnum.Left:
-                    end = cordination.Coordination[1] - int.Parse(cordination.Ship.ToString());
+                    end = cordination.Coordination[1] - (int)cordination.Ship;
                     break;
                 case Cordination.DirectionEnum.Right:
-                    end = cordination.Coordination[1] + int.Parse(cordination.Ship.ToString());
+                    end = cordination.Coordination[1] + (int)cordination.Ship;
                     break;
                 case Cordination.DirectionEnum.Down:
-                    end = cordination.Coordination[0] + int.Parse(cordination.Ship.ToString());
+                    end = cordination.Coordination[0] + (int)cordination.Ship;
                     break;
                 case Cordination.DirectionEnum.Top:
-                    end = cordination.Coordination[0] - int.Parse(cordination.Ship.ToString());
+                    end = cordination.Coordination[0] - (int)cordination.Ship;
                     break;
             }
 
-            if (end < Game.GRID_NUMBER && end >= 0)
-            {
-                if (cordination.Coordination[0] == i && cordination.Coordination[1] == j)
-                {
-                    if(end>)
-                    for (int i = 0; i < Game.GRID_NUMBER; i++)
-                    {
 
+            if (end < Game.GRID_NUMBER && end >= 0)
+            {   //x
+                if (cordination.Direction == Cordination.DirectionEnum.Left || cordination.Direction == Cordination.DirectionEnum.Right)
+                {
+                    if (cordination.Coordination[1] >end)
+                    {
+                        var temp = end;
+                        end = cordination.Coordination[1];
+                        cordination.Coordination[1] = temp;
                     }
+
+                    for (int i = cordination.Coordination[1]; i <= end-1 ; i++)
+                    {
+                        planTemp[ cordination.Coordination[0],i] = 1;
+                    }
+                   
+
+
+                }//y
+                else {
+
+                    if (cordination.Coordination[0] > end)
+                    {
+                        var temp = end;
+                        end = cordination.Coordination[0];
+                        cordination.Coordination[0] = temp;
+                    }
+
+                    for (int i = cordination.Coordination[0]; i <= end-1; i++)
+                    {
+                        planTemp[ i,cordination.Coordination[1]] = 1;
+                    }
+
+
                 }
-                
+
             }
 
 

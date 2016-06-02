@@ -20,6 +20,7 @@ namespace Bede.GameTest.Console
             
         }
 
+
         public int[,] Init()
         {
             for (int i = 0; i < GRID_NUMBER; i++)
@@ -33,6 +34,20 @@ namespace Bede.GameTest.Console
             return Plan;
         }
 
+
+        public void DisplayPlan(int[,] plan)
+        {
+            for (int i = 0; i < GRID_NUMBER; i++)
+            {
+                for (int j = 0; j < GRID_NUMBER; j++)
+                {
+                    System.Console.Write(plan[i,j]);
+
+                }
+                System.Console.Write("\n");
+            }
+
+        }
 
 
     }

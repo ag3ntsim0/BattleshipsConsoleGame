@@ -10,6 +10,13 @@ namespace Bede.GameTest.Console
     {
         static void Main(string[] args)
         {
+
+            
+            var player = new Player(false);
+            var plan=player.BuildTempPlan(new Cordination() { Coordination = new int[2] { 6 ,1 }, Direction = Cordination.DirectionEnum.Top, Ship = Cordination.ShipsEnum.Destroyers });
+            new Game().DisplayPlan(plan);
+
+            System.Console.ReadKey();
         }
     }
 }

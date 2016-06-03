@@ -28,9 +28,8 @@ namespace Bede.GameTest.Console
         {
             foreach (var cord in cordinations)
             {
-                var tempCord = cord;
                 if (!this.Exists(plan,cord))
-                    this.BuildTempPlan(ref plan, tempCord);
+                    this.BuildTempPlan(ref plan, cord);
             }
 
 
@@ -43,17 +42,18 @@ namespace Bede.GameTest.Console
             var end = this.PlanEnd(cordination);
 
             if (end < Game.GRID_NUMBER && end >= 0)
-            {   //x
+            {   
+                var start= cordination.Coordination[1];
+                //x
                 if (cordination.Direction == Cordination.DirectionEnum.Left || cordination.Direction == Cordination.DirectionEnum.Right)
                 {
                     if (cordination.Coordination[1] > end)
                     {
-                        var temp = end;
+                        start = end;
                         end = cordination.Coordination[1];
-                        cordination.Coordination[1] = temp;
                     }
 
-                    for (int i = cordination.Coordination[1]; i <= end - 1; i++)
+                    for (int i = start; i <= end - 1; i++)
                     {
                         if (plan[cordination.Coordination[0], i] !=0)
                             return true;
@@ -64,14 +64,15 @@ namespace Bede.GameTest.Console
                 }//y
                 else {
 
+                    start = cordination.Coordination[0];
+
                     if (cordination.Coordination[0] > end)
                     {
-                        var temp = end;
+                        start = end;
                         end = cordination.Coordination[0];
-                        cordination.Coordination[0] = temp;
                     }
 
-                    for (int i = cordination.Coordination[0]; i <= end - 1; i++)
+                    for (int i = start; i <= end - 1; i++)
                     {
                         if (plan[i, cordination.Coordination[1]] != 0)
                             return true;
@@ -94,17 +95,18 @@ namespace Bede.GameTest.Console
 
             
             if (end < Game.GRID_NUMBER && end >= 0)
-            {   //x
+            {
+                var start = cordination.Coordination[1];
+                //x
                 if (cordination.Direction == Cordination.DirectionEnum.Left || cordination.Direction == Cordination.DirectionEnum.Right)
                 {
                     if (cordination.Coordination[1] >end)
                     {
-                        var temp = end;
+                        start = end;
                         end = cordination.Coordination[1];
-                        cordination.Coordination[1] = temp;
                     }
 
-                    for (int i = cordination.Coordination[1]; i <= end-1 ; i++)
+                    for (int i = start; i <= end-1 ; i++)
                     {
                         if(cordination.Ship==Cordination.ShipsEnum.Battleship)
                             planTemp[ cordination.Coordination[0],i] = 1;
@@ -117,19 +119,20 @@ namespace Bede.GameTest.Console
                 }//y
                 else {
 
+                    start = cordination.Coordination[0];
+
                     if (cordination.Coordination[0] > end)
                     {
-                        var temp = end;
+                        start = end;
                         end = cordination.Coordination[0];
-                        cordination.Coordination[0] = temp;
                     }
 
-                    for (int i = cordination.Coordination[0]; i <= end-1; i++)
+                    for (int i = start; i <= end-1; i++)
                     {
                         if (cordination.Ship == Cordination.ShipsEnum.Battleship)
-                            planTemp[cordination.Coordination[0], i] = 1;
+                            planTemp[ i, cordination.Coordination[1]] = 1;
                         else
-                            planTemp[cordination.Coordination[0], i] = 2;
+                            planTemp[ i, cordination.Coordination[1]] = 2;
                     }
 
 

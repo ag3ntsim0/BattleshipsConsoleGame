@@ -41,5 +41,27 @@ namespace Bede.GameTest.Console
             this.Ship = ship;
         }
 
+
+        public bool Exists(Cordination cord,List<Cordination> cordinations)
+        {
+            if (cord.Ship == Cordination.ShipsEnum.Battleship)
+            {
+                if (cordinations.Where(x => x.Ship == Cordination.ShipsEnum.Battleship).ToList().Count >= 1)
+                    return true;
+            }
+            else if(cordinations.Where(x => x.Ship == Cordination.ShipsEnum.Destroyers).ToList().Count >= 2)
+                return true;
+
+            foreach (var cordination in cordinations)
+            {
+                if (cordination.Coordination[0] == cord.Coordination[0] && cordination.Coordination[1] == cord.Coordination[1]
+                    && cordination.Direction == cord.Direction && cordination.Ship == cord.Ship )
+                    return true;
+            }
+
+
+            return false;
+        }
+
     }
 }

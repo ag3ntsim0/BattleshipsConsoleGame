@@ -11,7 +11,7 @@ namespace Bede.GameTest.Console
 
 
         public bool IsComputerPlayer { get; set; }
-        public List<Cordination> Cordinations { get; set; }
+        
 
 
         public Player(bool isComputerPlayer)
@@ -22,15 +22,37 @@ namespace Bede.GameTest.Console
         }
 
 
-
-
-        public void Submit(ref int[,] plan, List<Cordination> cordinations)
+        public void StartComputerProcess(Game game)
         {
-            foreach (var cord in cordinations)
+            if (this.IsComputerPlayer)
             {
-                if (!this.Exists(plan,cord))
-                    this.BuildTempPlan(ref plan, cord);
+              
+                var plan = game.Plan;
+
+                this.Submit(ref plan);
+
+                
+                    
             }
+
+
+        }
+
+
+        public void Submit(ref int[,] plan)
+        {
+            var cords = new List<Cordination>();
+            do
+            {
+                var cord = this.RandomCordination(cords);
+                if (!this.Exists(plan, cord))
+                {
+                    this.BuildTempPlan(ref plan, cord);
+                    cords.Add(cord);
+                }
+
+            } while ((cords.Where(x => x.Ship == Cordination.ShipsEnum.Battleship).ToList().Count +
+                cords.Where(x => x.Ship == Cordination.ShipsEnum.Destroyers).ToList().Count) < 3);
 
 
         }
@@ -80,10 +102,12 @@ namespace Bede.GameTest.Console
 
 
                 }
+                //dosn't exist
+                return false;
 
             }
-
-            return false;
+            //out of plan
+            return true;
         }
 
 
@@ -168,6 +192,37 @@ namespace Bede.GameTest.Console
             return end;
 
         }
+
+
+
+        public Cordination RandomCordination(List<Cordination> cords)
+        {
+         
+                var random = new Random();
+                var cord = new Cordination();
+
+                do
+                {
+                    cord.Coordination[0] = random.Next(0, 10);
+                    cord.Coordination[1] = random.Next(0, 10);
+                    cord.Direction = (Cordination.DirectionEnum)random.Next(0, 4);
+                    cord.Ship = (Cordination.ShipsEnum)random.Next(4, 6);
+                } while (cord.Exists(cord, cords));
+
+
+                //cods.Add(cord);
+
+            //} while (cods.Where(x => x.Ship == Cordination.ShipsEnum.Battleship).ToList().Count > 1 &&
+            //        cods.Where(x => x.Ship == Cordination.ShipsEnum.Destroyers).ToList().Count > 2 && cods.Count<3);
+
+
+            
+
+            return cord;
+
+        }
+
+
 
     }
 }

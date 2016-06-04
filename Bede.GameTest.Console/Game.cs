@@ -11,7 +11,7 @@ namespace Bede.GameTest.Console
         public const int GRID_NUMBER=10;
 
         public int[,] Plan { get; set; }
-        
+        public List<Cordination> Cordinations { get; set; }
 
 
         public Game()

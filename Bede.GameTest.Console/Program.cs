@@ -11,19 +11,26 @@ namespace Bede.GameTest.Console
         static void Main(string[] args)
         {
 
-            
+            //init
             var player = new Player(true);
-            //var cordinations = new List<Cordination>() {
-            //    new Cordination() { Coordination = new int[2] { 2, 3 }, Direction = Cordination.DirectionEnum.Right, Ship = Cordination.ShipsEnum.Destroyers },
-            //    new Cordination() { Coordination = new int[2] { 6 ,1 }, Direction = Cordination.DirectionEnum.Up, Ship = Cordination.ShipsEnum.Destroyers },
-            //    new Cordination() { Coordination = new int[2] { 5 ,9 }, Direction = Cordination.DirectionEnum.Up, Ship = Cordination.ShipsEnum.Battleship }
-            //};
-            var game = new Game();
-            //game.Cordinations = cordinations;
 
+            var game = new Game();
             player.StartComputerProcess(game);
+            
+            //read cordination from user
+
             game.DisplayPlan(game.Plan);
 
+            var userCoord = new List<Coordination>();
+
+            do
+            {
+                System.Console.WriteLine("Please insert your Target Coordination");
+
+
+            } while (userCoord.Count<=(Game.GRID_NUMBER*Game.GRID_NUMBER));
+
+            System.Console.WriteLine("Please insert any Key to exit");
             System.Console.ReadKey();
         }
     }

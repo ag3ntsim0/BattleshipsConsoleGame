@@ -29,7 +29,7 @@ namespace Bede.GameTest.Console
               
                 var plan = game.Plan;
 
-                this.Submit(ref plan);
+                this.Submit(ref plan,game.ComputerCoordinations);
 
                 
                     
@@ -39,45 +39,44 @@ namespace Bede.GameTest.Console
         }
 
 
-        public void Submit(ref int[,] plan)
+        public void Submit(ref int[,] plan,List<Coordination> coords)
         {
-            var cords = new List<Cordination>();
             do
             {
-                var cord = this.RandomCordination(cords);
-                if (!this.Exists(plan, cord))
+                var coord = this.RandomCordination(coords);
+                if (!this.Exists(plan, coord))
                 {
-                    this.BuildTempPlan(ref plan, cord);
-                    cords.Add(cord);
+                    this.BuildTempPlan(ref plan, coord);
+                    coords.Add(coord);
                 }
 
-            } while ((cords.Where(x => x.Ship == Cordination.ShipsEnum.Battleship).ToList().Count +
-                cords.Where(x => x.Ship == Cordination.ShipsEnum.Destroyers).ToList().Count) < 3);
+            } while ((coords.Where(x => x.Ship == Coordination.ShipsEnum.Battleship).ToList().Count +
+                coords.Where(x => x.Ship == Coordination.ShipsEnum.Destroyer).ToList().Count) < 3);
 
 
         }
 
 
 
-        private bool Exists(int[,] plan, Cordination cordination)
+        private bool Exists(int[,] plan, Coordination coordination)
         {
-            var end = this.PlanEnd(cordination);
+            var end = this.PlanEnd(coordination);
 
             if (end < Game.GRID_NUMBER && end >= 0)
             {   
-                var start= cordination.Coordination[1];
+                var start= coordination.CoordinationStartPoint.X;
                 //x
-                if (cordination.Direction == Cordination.DirectionEnum.Left || cordination.Direction == Cordination.DirectionEnum.Right)
+                if (coordination.Direction == Coordination.DirectionEnum.Left || coordination.Direction == Coordination.DirectionEnum.Right)
                 {
-                    if (cordination.Coordination[1] > end)
+                    if (coordination.CoordinationStartPoint.X > end)
                     {
                         start = end;
-                        end = cordination.Coordination[1];
+                        end = coordination.CoordinationStartPoint.X;
                     }
 
                     for (int i = start; i <= end - 1; i++)
                     {
-                        if (plan[cordination.Coordination[0], i] !=0)
+                        if (plan[coordination.CoordinationStartPoint.Y, i] !=0)
                             return true;
                     }
 
@@ -86,23 +85,23 @@ namespace Bede.GameTest.Console
                 }//y
                 else {
 
-                    start = cordination.Coordination[0];
+                    start = coordination.CoordinationStartPoint.Y;
 
-                    if (cordination.Coordination[0] > end)
+                    if (coordination.CoordinationStartPoint.Y > end)
                     {
                         start = end;
-                        end = cordination.Coordination[0];
+                        end = coordination.CoordinationStartPoint.Y;
                     }
 
                     for (int i = start; i <= end - 1; i++)
                     {
-                        if (plan[i, cordination.Coordination[1]] != 0)
+                        if (plan[i, coordination.CoordinationStartPoint.X] != 0)
                             return true;
                     }
 
 
                 }
-                //dosn't exist
+                //dosn't exists
                 return false;
 
             }
@@ -111,31 +110,33 @@ namespace Bede.GameTest.Console
         }
 
 
-        private void BuildTempPlan(ref int[,] planTemp, Cordination cordination)
+        private void BuildTempPlan(ref int[,] planTemp, Coordination coordination)
         {
 
 
-            var end = this.PlanEnd(cordination);
+            var end = this.PlanEnd(coordination);
 
             
             if (end < Game.GRID_NUMBER && end >= 0)
             {
-                var start = cordination.Coordination[1];
+                var start = coordination.CoordinationStartPoint.X;
                 //x
-                if (cordination.Direction == Cordination.DirectionEnum.Left || cordination.Direction == Cordination.DirectionEnum.Right)
+                if (coordination.Direction == Coordination.DirectionEnum.Left || coordination.Direction == Coordination.DirectionEnum.Right)
                 {
-                    if (cordination.Coordination[1] >end)
+                    if (coordination.CoordinationStartPoint.X >end)
                     {
                         start = end;
-                        end = cordination.Coordination[1];
+                        end = coordination.CoordinationStartPoint.X;
                     }
 
                     for (int i = start; i <= end-1 ; i++)
                     {
-                        if(cordination.Ship==Cordination.ShipsEnum.Battleship)
-                            planTemp[ cordination.Coordination[0],i] = 1;
+                        coordination.CoordinationLigne.Add(new Coordination.CoordinationPointStruct(i,coordination.CoordinationStartPoint.Y));
+
+                        if(coordination.Ship==Coordination.ShipsEnum.Battleship)
+                            planTemp[ coordination.CoordinationStartPoint.Y,i] = Game.SIGN_BATTLESHIP;
                         else
-                            planTemp[cordination.Coordination[0], i] = 2;
+                            planTemp[coordination.CoordinationStartPoint.Y, i] = Game.SIGN_DESTROYER;
                     }
                    
 
@@ -143,20 +144,22 @@ namespace Bede.GameTest.Console
                 }//y
                 else {
 
-                    start = cordination.Coordination[0];
+                    start = coordination.CoordinationStartPoint.Y;
 
-                    if (cordination.Coordination[0] > end)
+                    if (coordination.CoordinationStartPoint.Y > end)
                     {
                         start = end;
-                        end = cordination.Coordination[0];
+                        end = coordination.CoordinationStartPoint.Y;
                     }
 
                     for (int i = start; i <= end-1; i++)
                     {
-                        if (cordination.Ship == Cordination.ShipsEnum.Battleship)
-                            planTemp[ i, cordination.Coordination[1]] = 1;
+                        coordination.CoordinationLigne.Add(new Coordination.CoordinationPointStruct(coordination.CoordinationStartPoint.X,i));
+
+                        if (coordination.Ship == Coordination.ShipsEnum.Battleship)
+                            planTemp[ i, coordination.CoordinationStartPoint.X] = Game.SIGN_BATTLESHIP;
                         else
-                            planTemp[ i, cordination.Coordination[1]] = 2;
+                            planTemp[ i, coordination.CoordinationStartPoint.X] = Game.SIGN_DESTROYER;
                     }
 
 
@@ -169,23 +172,23 @@ namespace Bede.GameTest.Console
         }
 
 
-        public int PlanEnd(Cordination cordination)
+        public int PlanEnd(Coordination coordination)
         {
             int end=0;
 
-            switch (cordination.Direction)
+            switch (coordination.Direction)
             {
-                case Cordination.DirectionEnum.Left:
-                    end = cordination.Coordination[1] - (int)cordination.Ship;
+                case Coordination.DirectionEnum.Left:
+                    end = coordination.CoordinationStartPoint.X - (int)coordination.Ship;
                     break;
-                case Cordination.DirectionEnum.Right:
-                    end = cordination.Coordination[1] + (int)cordination.Ship;
+                case Coordination.DirectionEnum.Right:
+                    end = coordination.CoordinationStartPoint.X + (int)coordination.Ship;
                     break;
-                case Cordination.DirectionEnum.Down:
-                    end = cordination.Coordination[0] + (int)cordination.Ship;
+                case Coordination.DirectionEnum.Down:
+                    end = coordination.CoordinationStartPoint.Y + (int)coordination.Ship;
                     break;
-                case Cordination.DirectionEnum.Up:
-                    end = cordination.Coordination[0] - (int)cordination.Ship;
+                case Coordination.DirectionEnum.Up:
+                    end = coordination.CoordinationStartPoint.Y - (int)coordination.Ship;
                     break;
             }
 
@@ -195,30 +198,24 @@ namespace Bede.GameTest.Console
 
 
 
-        public Cordination RandomCordination(List<Cordination> cords)
+        public Coordination RandomCordination(List<Coordination> coords)
         {
          
-                var random = new Random();
-                var cord = new Cordination();
+            var random = new Random();
+            Coordination coord;
 
-                do
-                {
-                    cord.Coordination[0] = random.Next(0, 10);
-                    cord.Coordination[1] = random.Next(0, 10);
-                    cord.Direction = (Cordination.DirectionEnum)random.Next(0, 4);
-                    cord.Ship = (Cordination.ShipsEnum)random.Next(4, 6);
-                } while (cord.Exists(cord, cords));
+            do
+            {
+                coord = new Coordination();
 
-
-                //cods.Add(cord);
-
-            //} while (cods.Where(x => x.Ship == Cordination.ShipsEnum.Battleship).ToList().Count > 1 &&
-            //        cods.Where(x => x.Ship == Cordination.ShipsEnum.Destroyers).ToList().Count > 2 && cods.Count<3);
-
+                coord.CoordinationStartPoint = new Coordination.CoordinationPointStruct(random.Next(0, 10), random.Next(0, 10));
+                coord.Direction = (Coordination.DirectionEnum)random.Next(0, 4);
+                coord.Ship = (Coordination.ShipsEnum)random.Next(4, 6);
+                
+            } while (coord.Exists(coord, coords));
 
             
-
-            return cord;
+            return coord;
 
         }
 

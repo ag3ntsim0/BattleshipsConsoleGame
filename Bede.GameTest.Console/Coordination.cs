@@ -32,7 +32,13 @@ namespace Bede.GameTest.Console
                 this.X = x;
                 this.Y = y;
             }
+            public CoordinationPointStruct(int x, char y)
+            {
+                this.X = x-1;
+                this.Y = Encoding.ASCII.GetBytes(y.ToString())[0] - 65;
+            }
 
+            
 
         }
 
@@ -49,12 +55,13 @@ namespace Bede.GameTest.Console
         {
             this.CoordinationLigne = new List<CoordinationPointStruct>();
         }
-     
 
 
-        public void SetCoordination(char[] coord, DirectionEnum direct,ShipsEnum ship)
+
+
+        public void SetCoordination(char[] coord, DirectionEnum direct, ShipsEnum ship)
         {
-        
+
             this.CoordinationStartPoint = new CoordinationPointStruct(int.Parse(coord[1].ToString()), coord[1]);
 
             this.Direction = direct;
@@ -66,10 +73,10 @@ namespace Bede.GameTest.Console
         {
             if (coord.Ship == Console.Coordination.ShipsEnum.Battleship)
             {
-                if (coordinations.Where(x => x.Ship == Console.Coordination.ShipsEnum.Battleship).ToList().Count >= 1)
+                if (coordinations.Where(x => x.Ship == Console.Coordination.ShipsEnum.Battleship).ToList().Count >= Game.NUMBER_BATTLESHIP)
                     return true;
             }
-            else if(coordinations.Where(x => x.Ship == Console.Coordination.ShipsEnum.Destroyer).ToList().Count >= 2)
+            else if(coordinations.Where(x => x.Ship == Console.Coordination.ShipsEnum.Destroyer).ToList().Count >= Game.NUMBER_DESTROYER)
                 return true;
 
             foreach (var cordination in coordinations)

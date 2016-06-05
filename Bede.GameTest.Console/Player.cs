@@ -51,7 +51,7 @@ namespace Bede.GameTest.Console
                 }
 
             } while ((coords.Where(x => x.Ship == Coordination.ShipsEnum.Battleship).ToList().Count +
-                coords.Where(x => x.Ship == Coordination.ShipsEnum.Destroyer).ToList().Count) < 3);
+                coords.Where(x => x.Ship == Coordination.ShipsEnum.Destroyer).ToList().Count) < (Game.NUMBER_BATTLESHIP + Game.NUMBER_DESTROYER));
 
 
         }

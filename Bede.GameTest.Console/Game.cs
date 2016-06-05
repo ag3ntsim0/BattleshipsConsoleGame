@@ -9,6 +9,9 @@ namespace Bede.GameTest.Console
     class Game
     {
         public const int GRID_NUMBER=10;
+        public const int NUMBER_BATTLESHIP = 1;
+        public const int NUMBER_DESTROYER = 2;
+        //console vision
         public const int SIGN_BATTLESHIP = 1;
         public const int SIGN_DESTROYER = 2;
         public const int HIT_BATTLESHIP = 9;
@@ -44,35 +47,57 @@ namespace Bede.GameTest.Console
             {
                 for (int j = 0; j < GRID_NUMBER; j++)
                 {
-                    System.Console.Write(plan[i,j]);
+                    switch (plan[i, j])
+                    {
+                        case SIGN_BATTLESHIP:
+                            System.Console.ForegroundColor = ConsoleColor.Cyan;
+                            break;
+                        case SIGN_DESTROYER:
+                            System.Console.ForegroundColor = ConsoleColor.Blue;
+                            break;
+                        case HIT_BATTLESHIP:
+                            System.Console.ForegroundColor = ConsoleColor.Red;
+                            break;
+                        case HIT_DESTROYER:
+                            System.Console.ForegroundColor = ConsoleColor.DarkRed;
+                            break;
+                        default:
+                            System.Console.ForegroundColor = ConsoleColor.White;
+                            break;
+                    }
+               
 
+                    System.Console.Write(plan[i, j]);
                 }
-                System.Console.Write("\n");
+                System.Console.WriteLine();
+                System.Console.ResetColor();
             }
 
         }
 
 
-        public Coordination CheckHit(ref int[,] plan,Coordination coord)
+        public Coordination CheckHit(ref int[,] plan,Coordination.CoordinationPointStruct coord)
         {
             //check if there's any valid point
             if (this.ComputerCoordinations.Any(
                 x =>
                     x.CoordinationLigne.Any(
                         y =>
-                            y.X == coord.CoordinationStartPoint.X && y.Y == coord.CoordinationStartPoint.Y
+                            y.X == coord.X && y.Y == coord.Y
                     )
                 ))
             {
-                plan[ coord.CoordinationStartPoint.Y,coord.CoordinationStartPoint.X] = (coord.Ship == Coordination.ShipsEnum.Battleship) ? HIT_BATTLESHIP : HIT_DESTROYER;
+                var coordResponse = this.ComputerCoordinations.First(
+                        x =>
+                        x.CoordinationLigne.Any(
+                            y =>
+                                y.X == coord.X && y.Y == coord.Y
+                        )
+                );
 
-                 var coordResponse=this.ComputerCoordinations.First(
-                                     x =>
-                                            x.CoordinationLigne.Any(
-                                                y =>
-                                                    y.X == coord.CoordinationStartPoint.X && y.Y == coord.CoordinationStartPoint.Y
-                                            )
-                                        );
+                plan[ coord.Y,coord.X] = (coordResponse.Ship == Coordination.ShipsEnum.Battleship) ? HIT_BATTLESHIP : HIT_DESTROYER;
+
+
                 coordResponse.IsAHit = this.IsSinking(coordResponse);
                 return coordResponse;   
             }

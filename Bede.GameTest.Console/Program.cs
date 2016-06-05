@@ -19,9 +19,11 @@ namespace Bede.GameTest.Console
             player.StartComputerProcess(game);
             
             //read coordination from user
-
+            
+            
+            /* Uncomment to view the result
             game.DisplayPlan(game.Plan);
-
+            */
             var userCoordinations = new List<Coordination.CoordinationPointStruct>();
 
             do
@@ -60,7 +62,7 @@ namespace Bede.GameTest.Console
                         else
                         {
                             System.Console.ForegroundColor = ConsoleColor.Yellow;
-                            System.Console.WriteLine("Target Missed ! Try again...");
+                            System.Console.WriteLine("OPS , Target Missed ! Try again...");
                         }
 
 
@@ -77,13 +79,15 @@ namespace Bede.GameTest.Console
                 else
                 {
                     System.Console.ForegroundColor = ConsoleColor.Red;
-                    System.Console.WriteLine("Invalide input !");
+                    System.Console.WriteLine("Invalid input !");
                 }
-                    
 
 
+
+                /* Uncomment to view the result
                 game.DisplayPlan(game.Plan);
-               
+                */
+
             } while (game.ComputerCoordinations.Where(x=> x.IsAHit).ToList().Count< (Game.NUMBER_BATTLESHIP+Game.NUMBER_DESTROYER)  );
 
             System.Console.ForegroundColor = ConsoleColor.DarkBlue;

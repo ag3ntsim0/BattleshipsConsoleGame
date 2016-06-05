@@ -43,6 +43,9 @@ namespace Bede.GameTest.Console
 
         public void DisplayPlan(int[,] plan)
         {
+            System.Console.ResetColor();
+            System.Console.WriteLine($"This Map reflects the meaning of numbers by Ships :\n{SIGN_BATTLESHIP}:{Coordination.ShipsEnum.Battleship}\n{HIT_BATTLESHIP}:Hit {Coordination.ShipsEnum.Battleship}\n{SIGN_DESTROYER}:{Coordination.ShipsEnum.Destroyer}\n{HIT_DESTROYER}:Hit {Coordination.ShipsEnum.Destroyer} ");
+
             for (int i = 0; i < GRID_NUMBER; i++)
             {
                 for (int j = 0; j < GRID_NUMBER; j++)

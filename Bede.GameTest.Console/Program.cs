@@ -16,18 +16,23 @@ namespace Bede.GameTest.Console
             var player = new Player(true);
 
             var game = new Game();
+
+            System.Console.ForegroundColor = ConsoleColor.Yellow;
+            System.Console.WriteLine("Loading...");
+
             player.StartComputerProcess(game);
             
             //read coordination from user
             
             
-            /* Uncomment to view the result
+            /* Uncomment to see the result
             game.DisplayPlan(game.Plan);
             */
             var userCoordinations = new List<Coordination.CoordinationPointStruct>();
 
             do
             {
+                System.Console.ResetColor();
                 System.Console.WriteLine("Please insert your Target Coordination");
                 var input = System.Console.ReadLine();
                 if (Regex.IsMatch(input, @"^[A-J]{1}([1-9]|10){1}$"))
@@ -84,7 +89,7 @@ namespace Bede.GameTest.Console
 
 
 
-                /* Uncomment to view the result
+                /* Uncomment to see the result
                 game.DisplayPlan(game.Plan);
                 */
 
